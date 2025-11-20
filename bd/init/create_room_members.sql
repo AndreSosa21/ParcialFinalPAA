@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS room_members (
+    id SERIAL PRIMARY KEY,
+    room_id INTEGER NOT NULL REFERENCES rooms (id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    
+    joined_at TIMESTAMP DEFAULT NOW(),
+
+    UNIQUE(room_id, user_id)
+);
