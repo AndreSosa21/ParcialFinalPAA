@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_chat
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: chatdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./bd/init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - chatnet
+
+  rabbitmq:
+    build:
+      context: ./backend
+      dockerfile: docker/broker.Dockerfile
+    container_name: rabbitmq_chat
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - chatnet
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: docker/api.Dockerfile
+    container_name: api_chat
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "3000:3000"
+    networks:
+      - chatnet
+
+  websocket:
+    build:
+      context: ./backend
+      dockerfile: docker/websocket.Dockerfile
+    container_name: websocket_chat
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - api
+      - postgres
+      - rabbitmq
+    ports:
+      - "3001:3001"
+    networks:
+      - chatnet
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: docker/worker.Dockerfile
+    container_name: worker_chat
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - chatnet
+
+networks:
+  chatnet:
+    driver: bridge
+
+volumes:
+  postgres_data:
