@@ -3,7 +3,7 @@ import {
   validateFieldsComplete,
   validateStrings,
   validateAllowedFields,
-} from "../../middleware/validation.middleware.js";
+} from "../middleware/validations.middleware.js";
 
 export const validateSendMessage = [
   validateAllowedFields(["content"]),

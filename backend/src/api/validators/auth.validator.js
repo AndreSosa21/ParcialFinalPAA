@@ -4,7 +4,7 @@ import {
   validateStrings,
   validateEmail,
   validatePasswordStrength,
-} from "../../middleware/validation.middleware.js";
+} from "../middleware/validations.middleware.js";
 
 export const validateRegister = [
   validateFieldsComplete(["username", "email", "password"]),

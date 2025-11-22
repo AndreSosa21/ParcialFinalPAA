@@ -1,11 +1,12 @@
 // src/api/validators/user.validator.js
 import {
+  validateAllowedFields,
   validateFieldsComplete,
-  validateStrings,
-} from "../../middleware/validation.middleware.js";
+  validateStrings
+} from "../middleware/validations.middleware.js";
 
 export const validateUpdateUser = [
   validateAllowedFields(["username"]),
   validateFieldsComplete(["username"]),
-  validateStrings(["username"]),
+  validateStrings(["username"])
 ];

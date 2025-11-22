@@ -1,5 +1,5 @@
 //auth.middleware.js
-import { verifyToken } from "../utils/jwt.js";
+import { verifyToken } from "../../utils/jwt.js";
 
 /**
  * Middleware para rutas protegidas.

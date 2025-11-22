@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import authRoutes from "./api/routes/auth.routes.js";
-import roomRoutes from "./api/routes/room.routes.js";
+import roomRoutes from "./api/routes/rooms.routes.js";
 import messageRoutes from "./api/routes/messages.routes.js";
 import userRoutes from "./api/routes/user.routes.js";
 

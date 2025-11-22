@@ -3,7 +3,7 @@ import {
   validateFieldsComplete,
   validateStrings,
   validateAllowedFields,
-} from "../../middleware/validation.middleware.js";
+} from "../middleware/validations.middleware.js";
 
 export const validateCreateRoom = [
   validateAllowedFields(["name", "type", "password"]),

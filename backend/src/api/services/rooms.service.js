@@ -4,8 +4,8 @@ import {
   getRoomById,
   addUserToRoom,
   isUserInRoom,
-} from "../../db/models/rooms.model.js";
-import bcrypt from "bcrypt";
+} from "../../db/models/room.model.js";
+import bcrypt from "bcryptjs";
 
 export const createRoom = async (user_id, data) => {
   const { name, type, password } = data;

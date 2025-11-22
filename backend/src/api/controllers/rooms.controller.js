@@ -1,4 +1,4 @@
-import * as roomService from "../services/room.service.js";
+import * as roomService from "../services/rooms.service.js";
 
 export const createRoom = async (req, res) => {
   const room = await roomService.createRoom(req.user.id, req.body);

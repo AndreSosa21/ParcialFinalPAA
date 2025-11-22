@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { generateToken } from "../../utils/jwt.js";
-import { getUserByEmail, createUser } from "../../db/models/users.model.js";
+import { getUserByEmail, createUser } from "../../db/models/user.model.js";
 
 export const register = async ({ username, email, password }) => {
   const exists = await getUserByEmail(email);

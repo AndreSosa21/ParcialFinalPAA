@@ -8,7 +8,7 @@ import {
   createRoom,
   joinRoom,
   getRooms,
-} from "../controllers/room.controller.js";
+} from "../controllers/rooms.controller.js";
 
 const router = Router();
 

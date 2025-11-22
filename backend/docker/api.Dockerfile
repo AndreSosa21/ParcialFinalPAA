@@ -2,11 +2,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY ../package*.json ./
+# Copiar package.json del contexto (backend/)
+COPY package*.json ./
+
 RUN npm install --production
 
-COPY ../src ./src
-COPY ../.env .env
+# Copiar código fuente
+COPY src ./src
+COPY .env .env
 
 EXPOSE 3000
 

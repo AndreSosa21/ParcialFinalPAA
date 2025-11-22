@@ -1,7 +1,7 @@
 // src/api/services/user.service.js
 import {
   getUserById,
-} from "../../db/models/users.model.js";
+} from "../../db/models/user.model.js";
 
 /**
  * Obtener perfil del usuario autenticado
