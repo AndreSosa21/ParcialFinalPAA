@@ -8,11 +8,15 @@ dotenv.config();
  * Genera un JWT firmado con el secreto del .env
  * @param {Object} payload - Datos a incluir en el token (id, email)
  */
-export const generateToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: "2h",
-  });
+export const generateToken = ({ id, email, token_version }) => {
+  return jwt.sign(
+    { id, email, token_version },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 };
+
+
 
 /**
  * Verifica un token JWT
@@ -26,3 +30,5 @@ export const verifyToken = (token) => {
     return null; // token expirado o inválido
   }
 };
+
+

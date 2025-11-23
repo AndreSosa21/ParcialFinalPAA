@@ -1,4 +1,3 @@
-// src/websocket/index.js
 import { WebSocketServer } from "ws";
 import { verifyToken } from "../utils/jwt.js";
 import { RoomManager } from "./rooms/roomManager.js";
@@ -12,22 +11,15 @@ export const initWebSocketServer = (httpServer) => {
   const roomManager = new RoomManager();
 
   wss.on("connection", (socket, req) => {
-    // Extraer token del query param ?token=...
     const params = new URLSearchParams(req.url.replace("/?", ""));
     const token = params.get("token");
 
-    if (!token) {
-      socket.close();
-      return;
-    }
+    if (!token) return socket.close();
 
     const decoded = verifyToken(token);
-    if (!decoded) {
-      socket.close();
-      return;
-    }
+    if (!decoded) return socket.close();
 
-    socket.user = decoded; // attach user
+    socket.user = decoded;
     socket.rooms = new Set();
 
     handleConnection(socket);
@@ -38,9 +30,7 @@ export const initWebSocketServer = (httpServer) => {
 
         if (data.type === "join_room") {
           handleJoinRoom(socket, data, roomManager);
-        }
-
-        if (data.type === "send_message") {
+        } else if (data.type === "send_message") {
           handleIncomingMessage(socket, data, roomManager);
         }
       } catch (err) {

@@ -12,6 +12,7 @@ import userRoutes from "./api/routes/user.routes.js";
 import { testConnection } from "./db/connection.js";
 import { connectBroker } from "./broker/connection.js";
 import { initWebSocketServer } from "./websocket/index.js";
+import { errorHandler } from "./api/middleware/errorHandler.js";
 
 dotenv.config();
 
@@ -55,5 +56,5 @@ const startApp = async () => {
     process.exit(1);
   }
 };
-
+app.use(errorHandler);
 startApp();

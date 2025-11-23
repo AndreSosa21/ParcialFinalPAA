@@ -6,7 +6,7 @@ import { pool } from "../connection.js";
  */
 export const getUserByEmail = async (email) => {
   const query = `
-    SELECT id, username, email, password_hash, created_at
+    SELECT id, username, email, password_hash,token_version, created_at
     FROM users
     WHERE email = $1
     LIMIT 1;
@@ -34,7 +34,7 @@ export const createUser = async ({ username, email, password_hash }) => {
  */
 export const getUserById = async (id) => {
   const query = `
-    SELECT id, username, email, created_at
+    SELECT id, username, email,token_version, created_at
     FROM users
     WHERE id = $1;
   `;

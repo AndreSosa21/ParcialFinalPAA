@@ -1,26 +1,20 @@
-// src/db/models/rooms.model.js
+// src/db/models/room.model.js
 import { pool } from "../connection.js";
 
-/**
- * Crear sala (pública o privada)
- */
-export const createRoom = async ({ name, type, password_hash, created_by }) => {
+export const createRoom = async ({ name, is_private, password_hash, created_by }) => {
   const query = `
-    INSERT INTO rooms (name, type, password_hash, created_by)
+    INSERT INTO rooms (name, is_private, password_hash, created_by)
     VALUES ($1, $2, $3, $4)
-    RETURNING id, name, type, created_by, created_at;
+    RETURNING id, name, is_private, created_by, created_at;
   `;
-  const values = [name, type, password_hash, created_by];
+  const values = [name, is_private, password_hash, created_by];
   const result = await pool.query(query, values);
   return result.rows[0];
 };
 
-/**
- * Obtener todas las salas
- */
 export const getAllRooms = async () => {
   const query = `
-    SELECT id, name, type, created_by, created_at
+    SELECT id, name, is_private, created_by, created_at
     FROM rooms
     ORDER BY created_at DESC;
   `;
@@ -28,12 +22,9 @@ export const getAllRooms = async () => {
   return result.rows;
 };
 
-/**
- * Obtener sala por ID
- */
 export const getRoomById = async (room_id) => {
   const query = `
-    SELECT id, name, type, password_hash, created_by, created_at
+    SELECT id, name, is_private, password_hash, created_by, created_at
     FROM rooms
     WHERE id = $1;
   `;
@@ -41,9 +32,6 @@ export const getRoomById = async (room_id) => {
   return result.rows[0];
 };
 
-/**
- * Agregar usuario a una sala
- */
 export const addUserToRoom = async (room_id, user_id) => {
   const query = `
     INSERT INTO room_members (room_id, user_id)
@@ -55,9 +43,6 @@ export const addUserToRoom = async (room_id, user_id) => {
   return result.rows[0];
 };
 
-/**
- * Verificar si el usuario ya está en la sala
- */
 export const isUserInRoom = async (room_id, user_id) => {
   const query = `
     SELECT id FROM room_members

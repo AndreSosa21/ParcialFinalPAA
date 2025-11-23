@@ -1,3 +1,4 @@
+// src/api/services/rooms.service.js
 import {
   createRoom as modelCreateRoom,
   getAllRooms,
@@ -10,15 +11,18 @@ import bcrypt from "bcryptjs";
 export const createRoom = async (user_id, data) => {
   const { name, type, password } = data;
 
+  // type → is_private (TRUE para privadas)
+  const is_private = type === "private";
+
   let password_hash = null;
 
-  if (type === "private") {
+  if (is_private) {
     password_hash = await bcrypt.hash(password, 10);
   }
 
   const room = await modelCreateRoom({
     name,
-    type,
+    is_private,
     password_hash,
     created_by: user_id,
   });
@@ -31,7 +35,7 @@ export const joinRoom = async (user_id, room_id, password) => {
 
   if (!room) throw new Error("Room not found");
 
-  if (room.type === "private") {
+  if (room.is_private) {
     const ok = await bcrypt.compare(password, room.password_hash);
     if (!ok) throw new Error("Invalid password for this room");
   }

@@ -1,11 +1,7 @@
-//auth.middleware.js
 import { verifyToken } from "../../utils/jwt.js";
+import { getUserById } from "../../db/models/user.model.js";
 
-/**
- * Middleware para rutas protegidas.
- * Verifica la existencia y validez del token JWT.
- */
-export const requireAuth = (req, res, next) => {
+export const requireAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -14,23 +10,30 @@ export const requireAuth = (req, res, next) => {
 
   const [scheme, token] = authHeader.split(" ");
 
-  // validar formato "Bearer <token>"
   if (!/^Bearer$/i.test(scheme) || !token) {
     return res.status(401).json({ message: "Invalid authorization format" });
   }
 
-  try  {
-
-    const decoded = verifyToken(token);
-    if (!decoded) {
+  // 👉 Verificar token firmado
+  const decoded = verifyToken(token);
+  if (!decoded) {
     return res.status(401).json({ message: "Invalid or expired token" });
-    }
-    req.user = decoded;
-    next();
-    } catch (error) {
-        return res.status(401).json({ message: "Invalid or expired token" });
-    }  
+  }
+
+  // 👉 Obtener usuario real desde la DB
+  const user = await getUserById(decoded.id);
+  if (!user) {
+    return res.status(401).json({ message: "Invalid token user" });
+  }
+
+  // 🚨 ***VALIDACIÓN CRÍTICA***: token_version debe coincidir
+  if (user.token_version !== decoded.token_version) {
+    return res.status(401).json({
+      message: "Token no longer valid (a newer login replaced this token)",
+    });
+  }
+
+  // OK → Attach user
+  req.user = user;
+  next();
 };
-
-
-

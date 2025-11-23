@@ -1,6 +1,7 @@
 import * as messageService from "../services/messages.service.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 
-export const sendMessage = async (req, res) => {
+export const sendMessage = asyncHandler(async(req, res) => {
   const { id } = req.params; // room_id
   const { content } = req.body;
 
@@ -11,9 +12,9 @@ export const sendMessage = async (req, res) => {
   });
 
   return res.status(201).json(result);
-};
+});
 
-export const getMessages = async (req, res) => {
+export const getMessages = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { page = 0, limit = 20 } = req.query;
 
@@ -24,4 +25,4 @@ export const getMessages = async (req, res) => {
   });
 
   return res.status(200).json(result);
-};
+});
