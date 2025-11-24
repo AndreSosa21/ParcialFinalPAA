@@ -1,0 +1,64 @@
+.sala-vivo-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sala-vivo-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.sala-vivo-kicker {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.sala-vivo-title {
+  margin: 2px 0 0 0;
+  font-size: 1.25rem;
+}
+
+.sala-vivo-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.sala-vivo-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.sala-vivo-user {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.sala-vivo-back {
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  color: var(--text);
+  font-size: 0.8rem;
+}
+
+.sala-vivo-back:hover {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.sala-vivo-not-found {
+  text-align: center;
+  padding: 20px;
+}

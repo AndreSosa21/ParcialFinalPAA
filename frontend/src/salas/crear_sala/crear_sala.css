@@ -1,0 +1,123 @@
+.crear-sala-page {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.crear-sala-header h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.3rem;
+}
+
+.crear-sala-header p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.crear-sala-card {
+  position: relative;
+  margin-top: 4px;
+  padding: 18px 16px 16px;
+  border-radius: 20px;
+  background: radial-gradient(circle at top, #111827 0, #020617 70%);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.9);
+}
+
+.crear-sala-emoji {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  font-size: 1.8rem;
+  opacity: 0.7;
+}
+
+.crear-sala-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.crear-sala-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.crear-sala-label input {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+}
+
+.crear-sala-label input::placeholder {
+  color: #6b7280;
+}
+
+.crear-sala-label input:focus {
+  outline: none;
+  border-color: var(--accent-alt);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6);
+}
+
+.crear-sala-toggle {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  gap: 4px;
+}
+
+.crear-sala-toggle-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.crear-sala-toggle-btn.is-active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  color: #020617;
+  font-weight: 600;
+}
+
+.crear-sala-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.crear-sala-cancel,
+.crear-sala-submit {
+  padding: 7px 11px;
+  border-radius: var(--radius-pill);
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.crear-sala-cancel {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: var(--muted);
+}
+
+.crear-sala-submit {
+  background: #2563eb;
+  color: #f9fafb;
+}
+
+@media (max-width: 640px) {
+  .crear-sala-card {
+    padding-inline: 14px;
+  }
+}
