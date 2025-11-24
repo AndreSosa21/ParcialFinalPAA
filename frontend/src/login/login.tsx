@@ -2,32 +2,59 @@ import React, { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
-
-type User = {
-  username: string;
-  email: string;
-};
+import { API_URL } from "../config";
+import type { AuthUser } from "../App";
 
 type LoginProps = {
-  onLogin: (user: User) => void;
+  onLoginSuccess: (data: { token: string; user: AuthUser }) => void;
 };
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); // lo mandamos igual, el back puede usar uno u otro
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMsg(null);
 
-    if (!username || !email || !password) {
-      alert("Completa todos los campos ✋");
+    if (!email || !password) {
+      setErrorMsg("Ingresa al menos correo y contraseña.");
       return;
     }
 
-    onLogin({ username, email });
-    navigate("/salas");
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        // mandamos username por si el back lo usa, pero lo importante es email+password
+        body: JSON.stringify({ email, password, username }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Error ${res.status}`);
+      }
+
+      const data = (await res.json()) as {
+        token: string;
+        user: AuthUser;
+      };
+
+      onLoginSuccess({ token: data.token, user: data.user });
+      navigate("/salas");
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(
+        "No se pudo iniciar sesión. Revisa las credenciales o que el backend esté corriendo."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,14 +72,14 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             entra a tus salas en segundos
           </h2>
           <p className="auth-subtitle">
-            Usa un usuario de prueba y juega con las salas públicas y privadas.
-            Más adelante este login hablará con tu API real.
+            Usa un usuario registrado en la API
+            <code> /auth/register </code> o crea uno ahora mismo.
           </p>
 
           <ul className="auth-list">
-            <li>⚡ Mensajes en tiempo real via WebSocket.</li>
-            <li>💾 Mensajes persistidos en la base de datos.</li>
-            <li>🔐 Salas públicas y privadas con control de acceso.</li>
+            <li>⚡ Login contra la API real (JWT).</li>
+            <li>💬 Acceso a salas y mensajes.</li>
+            <li>🔐 WebSocket autenticado con token.</li>
           </ul>
 
           <p className="auth-footnote">
@@ -65,12 +92,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <div className="auth-card-emoji">💬</div>
           <h3 className="auth-form-title">Iniciar sesión</h3>
           <p className="auth-form-subtitle">
-            Ingresa cualquier usuario de prueba para entrar al sistema.
+            Este formulario usa <code>/auth/login</code> del backend en
+            <code> {API_URL}</code>.
           </p>
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <label className="auth-label">
-              Usuario
+              Usuario (opcional)
               <input
                 type="text"
                 value={username}
@@ -86,6 +114,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="tucorreo@ejemplo.com"
+                required
               />
             </label>
 
@@ -96,11 +125,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                required
               />
             </label>
 
-            <button type="submit" className="auth-submit">
-              Entrar al chat 🚀
+            {errorMsg && <p className="auth-error">{errorMsg}</p>}
+
+            <button
+              type="submit"
+              className="auth-submit"
+              disabled={loading}
+            >
+              {loading ? "Conectando..." : "Entrar al chat 🚀"}
             </button>
           </form>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Navigate, Link } from "react-router-dom";
 import Login from "./login/login";
 import Register from "./register/register";
@@ -7,49 +7,47 @@ import CrearSala from "./salas/crear_sala/crear_sala";
 import SalaVivo from "./salas/sala_vivo/sala_vivo";
 import "./index.css";
 
-type User = {
+export type AuthUser = {
+  id?: number;
   username: string;
   email: string;
 };
 
-type RoomType = "public" | "private";
-
-export type Room = {
-  id: number;
-  name: string;
-  type: RoomType;
+type AuthState = {
+  user: AuthUser | null;
+  token: string | null;
 };
 
-const initialRooms: Room[] = [
-  { id: 1, name: "General 💬", type: "public" },
-  { id: 2, name: "Privada PAA 🔐", type: "private" },
-];
+export type RoomType = "public" | "private";
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
-  const [rooms, setRooms] = useState<Room[]>(initialRooms);
+  const [auth, setAuth] = useState<AuthState>({ user: null, token: null });
 
-  const handleLogin = (userData: User) => {
-    setUser(userData);
-  };
+  useEffect(() => {
+    const raw = localStorage.getItem("paa_chat_auth");
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw) as AuthState;
+      if (parsed?.user && parsed?.token) {
+        setAuth(parsed);
+      }
+    } catch {
+      localStorage.removeItem("paa_chat_auth");
+    }
+  }, []);
 
-  const handleRegister = (userData: User) => {
-    setUser(userData);
+  const handleLoginSuccess = (data: { token: string; user: AuthUser }) => {
+    const next: AuthState = { user: data.user, token: data.token };
+    setAuth(next);
+    localStorage.setItem("paa_chat_auth", JSON.stringify(next));
   };
 
   const handleLogout = () => {
-    setUser(null);
+    setAuth({ user: null, token: null });
+    localStorage.removeItem("paa_chat_auth");
   };
 
-  const handleCreateRoom = (roomData: { name: string; type: RoomType }) => {
-    const nextId = rooms.length ? Math.max(...rooms.map((r) => r.id)) + 1 : 1;
-    const newRoom: Room = {
-      id: nextId,
-      name: roomData.name,
-      type: roomData.type,
-    };
-    setRooms((prev) => [...prev, newRoom]);
-  };
+  const isLoggedIn = Boolean(auth.user && auth.token);
 
   return (
     <div className="app-root">
@@ -63,9 +61,9 @@ function App() {
         </Link>
 
         <nav className="app-nav">
-          {user ? (
+          {isLoggedIn && auth.user ? (
             <>
-              <span className="app-user-pill">🧑‍💻 {user.username}</span>
+              <span className="app-user-pill">🧑‍💻 {auth.user.username}</span>
               <Link to="/salas" className="app-nav-link">
                 Salas
               </Link>
@@ -96,7 +94,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  user ? (
+                  isLoggedIn ? (
                     <Navigate to="/salas" replace />
                   ) : (
                     <Navigate to="/login" replace />
@@ -104,17 +102,18 @@ function App() {
                 }
               />
 
-              <Route path="/login" element={<Login onLogin={handleLogin} />} />
               <Route
-                path="/register"
-                element={<Register onRegister={handleRegister} />}
+                path="/login"
+                element={<Login onLoginSuccess={handleLoginSuccess} />}
               />
+
+              <Route path="/register" element={<Register />} />
 
               <Route
                 path="/salas"
                 element={
-                  user ? (
-                    <Salas user={user} rooms={rooms} />
+                  isLoggedIn && auth.user && auth.token ? (
+                    <Salas user={auth.user} token={auth.token} />
                   ) : (
                     <Navigate to="/login" replace />
                   )
@@ -124,8 +123,8 @@ function App() {
               <Route
                 path="/salas/crear"
                 element={
-                  user ? (
-                    <CrearSala onCreateRoom={handleCreateRoom} />
+                  isLoggedIn && auth.token ? (
+                    <CrearSala token={auth.token} />
                   ) : (
                     <Navigate to="/login" replace />
                   )
@@ -135,8 +134,11 @@ function App() {
               <Route
                 path="/salas/:roomId"
                 element={
-                  user ? (
-                    <SalaVivo user={user} rooms={rooms} />
+                  isLoggedIn && auth.user && auth.token ? (
+                    <SalaVivo
+                      user={auth.user}
+                      token={auth.token}
+                    />
                   ) : (
                     <Navigate to="/login" replace />
                   )

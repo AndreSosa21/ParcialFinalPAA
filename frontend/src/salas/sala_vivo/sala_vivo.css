@@ -62,3 +62,50 @@
   text-align: center;
   padding: 20px;
 }
+
+.sala-vivo-join-card {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.sala-vivo-join-form {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.sala-vivo-join-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  flex: 1;
+}
+
+.sala-vivo-join-form input {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #cbd5f5;
+  font-size: 0.9rem;
+}
+
+.sala-vivo-join-form button {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: #fff;
+}
+
+.sala-vivo-error {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #b91c1c;
+}

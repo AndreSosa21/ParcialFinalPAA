@@ -1,1 +1,32 @@
 @import "../login/login.css";
+.auth-error {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.password-hints {
+  list-style: none;
+  padding-left: 0;
+  margin: 4px 0 12px;
+  font-size: 0.75rem;
+}
+
+.password-hints li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.password-hints li.ok {
+  color: #16a34a;
+}
+
+.password-hints li.bad {
+  color: #f97316;
+}

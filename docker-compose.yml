@@ -19,7 +19,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - chatnet
-
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d chatdb"]
       interval: 5s
@@ -108,6 +107,29 @@ services:
         condition: service_healthy
     networks:
       - chatnet
+
+  # ============================
+  # 🖥️ FRONTEND (React + Vite)
+  # ============================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend_chat
+    environment:
+      # 👇 Estas URLs las usa el NAVEGADOR, por eso deben ser localhost
+      - VITE_API_URL=http://localhost:3000
+      - VITE_WS_URL=ws://localhost:3001
+    ports:
+      - "5173:5173"
+    depends_on:
+      api:
+        condition: service_started
+      websocket:
+        condition: service_started
+    networks:
+      - chatnet
+
 
 # ============================
 # NETWORKS & VOLUMES
