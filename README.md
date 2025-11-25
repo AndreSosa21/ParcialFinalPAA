@@ -592,5 +592,3 @@ Beneficios:
 - [x] Colección Postman disponible para evaluación.
 
 ---
-
-> Cualquier profesor/compañero debería poder levantar todo el sistema siguiendo este README, revisar la arquitectura y verificar el flujo completo **usuario → frontend → API/WS → RabbitMQ → Worker → PostgreSQL → WebSocket → frontend**.
